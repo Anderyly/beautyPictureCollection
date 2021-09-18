@@ -1,26 +1,22 @@
 package main
 
 import (
+	"github.com/robfig/cron/v3"
 	"log"
 	"warm/task/niutu114"
 	"warm/task/xiannvtu"
 	"warm/task/yuacg"
 )
 
-
 func main() {
-
-	start()
-	return
-
-	//spec := "45 10 * * *"
-	//c := cron.New()
-	//c.AddFunc(spec, start)
-	//c.Start()
-	//select {}
+	spec := "30 1 * * *"
+	c := cron.New()
+	c.AddFunc(spec, run)
+	c.Start()
+	select {}
 }
 
-func start() {
+func run() {
 	log.Println("已开启线程采集，author:anderyly")
 
 	// 仙女图采集
@@ -30,7 +26,5 @@ func start() {
 	// 雨溪萌域采集
 	go yuacg.Start()
 
-	select {
-
-	}
+	select {}
 }
