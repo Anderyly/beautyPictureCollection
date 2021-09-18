@@ -6,7 +6,7 @@
 
 # 编译
 ```shell
-    git clone https://github.com/Anderyly/beautyPictureCollection.git
+    git clone https://github.com/Anderyly/beautyPictureCollection.git warm
     go mod init && go mod tidy
     go build
 ```
