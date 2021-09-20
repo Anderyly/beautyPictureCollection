@@ -50,7 +50,6 @@ func getList(paths, dz string) {
 			}
 			for _, matches := range submatch {
 				row := detail(string(matches[1]), "", string(matches[2]), paths)
-				//goto End
 				if row {
 					len1 += 1
 					if len1 == 3 {

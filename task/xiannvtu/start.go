@@ -63,7 +63,6 @@ func detail(id, img, title, paths string) bool {
 
 	url := "https://www.xiannvtu.com/v/" + id + ".html"
 	sqlUrl := url
-	//log.Println("仙女图采集，当前地址：" + url)
 
 	if rs {
 		log.Println("仙女图 文章：" + title + " 已存在，跳过执行")

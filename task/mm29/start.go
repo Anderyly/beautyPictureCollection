@@ -66,8 +66,6 @@ func detail(id, title, dz, paths string) bool {
 
 	url := "https://www.mm29.com/" + dz + "/" + id + ".html"
 	sqlUrl := url
-	//log.Println("mm29采集，当前地址：" + url)
-
 	if rs {
 		log.Println("mm29 文章：" + title + " 已存在，跳过执行")
 		return true

@@ -62,7 +62,6 @@ func GetId(title string) (bool, int) {
 
 // 判断标签是否存在
 func GetMetaId(name string) (bool, int) {
-
 	conn()
 
 	type Check struct {

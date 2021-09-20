@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/robfig/cron/v3"
-	"log"
 	"warm/task/mm29"
 	"warm/task/niutu114"
 	"warm/task/shejumm"
@@ -20,17 +19,11 @@ func main() {
 
 func run() {
 
-	log.Println("已开启线程采集，author:anderyly")
-
 	go xiannvtu.Start() // 仙女图采集
-
 	go niutu114.Start() // 牛图采集
-
-	go yuacg.Start() // 雨溪萌域采集
-
-	go shejumm.Start() // 射菊mm采集
-
-	go mm29.Start() // mm29采集
+	go yuacg.Start()    // 雨溪萌域采集
+	go shejumm.Start()  // 射菊mm采集
+	go mm29.Start()     // mm29采集
 
 	select {}
 }

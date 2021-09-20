@@ -124,7 +124,6 @@ func DownPic(id, paths, page, title, imgUrl string) string {
 		log.Println(err.Error())
 	} else {
 		_, err = f.Write([]byte(""))
-		//CheckErr(err)
 		if err != nil {
 			log.Println(err)
 			return ""

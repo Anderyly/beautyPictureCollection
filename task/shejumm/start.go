@@ -51,7 +51,6 @@ func detail(id, title string) bool {
 
 	url := "https://www.shejumm.com/article/" + id + "/"
 	sqlUrl := url
-	//log.Println("射菊MM采集，当前地址：" + url)
 
 	if rs {
 		log.Println("射菊MM 文章：" + title + " 已存在，跳过执行")

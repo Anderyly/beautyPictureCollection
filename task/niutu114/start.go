@@ -11,33 +11,33 @@ import (
 
 func Start() {
 	list := map[string]string{
-		"ns" : "nvshen",
-		"xqx" : "xiaoqingxin",
-		"sx" : "suxiong",
-		"tyjr" : "tongyanjuru",
-		"90h" : "90hou",
-		"jp" : "jiepai",
-		"yw" : "youwu",
-		"yj" : "yujie",
-		"br" : "baoru",
-		"tnl" : "tunvlang",
-		"ny" : "neiyiyouhuo",
-		"qz" : "qizhimeinv",
-		"jmh" : "jiemeihua",
-		"qc" : "qingchunmeinv",
-		"jp1" : "jipinmeinv",
-		"mx" : "meixiong",
-		"xxn" : "xiaoxiannv",
-		"nm" : "nenmo",
-		"swmt" : "siwameitui",
-		"jr" : "juru",
-		"bjn" : "bijini",
-		"zf" : "zhifuyouhuo",
-		"qt" : "qiaotun",
-		"ss" : "shishen",
+		"ns":   "nvshen",
+		"xqx":  "xiaoqingxin",
+		"sx":   "suxiong",
+		"tyjr": "tongyanjuru",
+		"90h":  "90hou",
+		"jp":   "jiepai",
+		"yw":   "youwu",
+		"yj":   "yujie",
+		"br":   "baoru",
+		"tnl":  "tunvlang",
+		"ny":   "neiyiyouhuo",
+		"qz":   "qizhimeinv",
+		"jmh":  "jiemeihua",
+		"qc":   "qingchunmeinv",
+		"jp1":  "jipinmeinv",
+		"mx":   "meixiong",
+		"xxn":  "xiaoxiannv",
+		"nm":   "nenmo",
+		"swmt": "siwameitui",
+		"jr":   "juru",
+		"bjn":  "bijini",
+		"zf":   "zhifuyouhuo",
+		"qt":   "qiaotun",
+		"ss":   "shishen",
 	}
 
-	for k,v := range list {
+	for k, v := range list {
 		go getList(k, v)
 	}
 
@@ -47,7 +47,7 @@ func Start() {
 func getList(paths, dz string) {
 	log.Println("牛图开始采集，当前分类：" + paths)
 	len1 := 1
-	for i := 1; i<= 10000; i++ {
+	for i := 1; i <= 10000; i++ {
 		url := "http://www.niutu114.com/tag/" + dz + "/?page=" + strconv.Itoa(i)
 		rs := other.HttpGet(url, 1)
 
@@ -59,9 +59,9 @@ func getList(paths, dz string) {
 			compile := regexp.MustCompile(zz)
 			submatch := compile.FindAllSubmatch([]byte(rs), -1)
 			for _, matches := range submatch {
-				sub := string(matches[1]) // 分类
-				date := string(matches[2]) // 日期
-				id := string(matches[3]) // id
+				sub := string(matches[1])   // 分类
+				date := string(matches[2])  // 日期
+				id := string(matches[3])    // id
 				title := string(matches[4]) // 标题
 				row := detail(sub, date, id, other.TrimHtml(title))
 				if row {
@@ -82,12 +82,11 @@ End:
 }
 
 func detail(sub, date, id, title string) bool {
-	rs,_ := other.GetId(title)
+	rs, _ := other.GetId(title)
 
 	url := "http://www.niutu114.com/meinv/" + sub + "/" + date + "/" + id
 	sqlUrl := url
 	//log.Println("牛图采集，当前地址：" + url)
-
 
 	if rs {
 		log.Println("牛图 文章：" + title + " 已存在，跳过执行")
@@ -95,11 +94,11 @@ func detail(sub, date, id, title string) bool {
 	} else {
 		// 第一次curl
 		str := ""
-		st, ids, keyword, created_at := content(url + ".html", sub, date, "1", title, id)
+		st, ids, keyword, created_at := content(url+".html", sub, date, "1", title, id)
 		str += st
 		if ids != false {
 			for i := 2; i <= 10000; i++ {
-				st, ids, _, _ := content(url + "_" + strconv.Itoa(i) + ".html", sub, date, strconv.Itoa(i), title, id)
+				st, ids, _, _ := content(url+"_"+strconv.Itoa(i)+".html", sub, date, strconv.Itoa(i), title, id)
 				str += st
 				if ids == false {
 					goto End
@@ -118,8 +117,8 @@ func detail(sub, date, id, title string) bool {
 
 }
 
-func content(url, sub, date, page, title, id string) (string, bool, string, string){
-	log.Println("牛图采集，当前地址：" + url)
+func content(url, sub, date, page, title, id string) (string, bool, string, string) {
+	//log.Println("牛图采集，当前地址：" + url)
 	rs := other.HttpGet(url, 1)
 	if strings.Contains(rs, "Page Not Found") {
 		return "", false, "", ""
@@ -132,10 +131,9 @@ func content(url, sub, date, page, title, id string) (string, bool, string, stri
 	str := ""
 	for _, matches := range submatch {
 		alt := string(matches[2])
-		img := other.DownPic(id, "nt/" + sub + "/" + date, page, title, string(matches[3]))
+		img := other.DownPic(id, "nt/"+sub+"/"+date, page, title, string(matches[3]))
 		str += "![" + alt + "](" + img + ")\n"
 	}
-
 
 	// 正则分类
 	keywords := ""
