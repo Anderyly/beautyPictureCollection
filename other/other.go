@@ -28,7 +28,6 @@ func UnixToDate(str, dateVal string) (asd string) {
 
 }
 
-
 func CheckErr(err error) {
 	if err != nil {
 		log.Println("exec failed:", err)
@@ -68,8 +67,6 @@ func ConvertToString(src string, srcCode string, tagCode string) string {
 	return result
 
 }
-
-
 
 func ExternalIP() (net.IP, error) {
 	ifaces, err := net.Interfaces()
@@ -114,7 +111,6 @@ func GetIpFromAddr(addr net.Addr) net.IP {
 }
 
 func DownPic(id, paths, page, title, imgUrl string) string {
-
 	if GetConf("file.Path") == "1" {
 		return imgUrl
 	}
@@ -122,12 +118,12 @@ func DownPic(id, paths, page, title, imgUrl string) string {
 	imgPath := GetConf("file.Path") + paths + "/" + id + "/"
 	err := CreateMutiDir(imgPath)
 	CheckErr(err)
-	f,err := os.Create(imgPath + title + ".txt")
+	f, err := os.Create(imgPath + title + ".txt")
 	defer f.Close()
-	if err !=nil {
+	if err != nil {
 		log.Println(err.Error())
 	} else {
-		_,err=f.Write([]byte(""))
+		_, err = f.Write([]byte(""))
 		//CheckErr(err)
 		if err != nil {
 			log.Println(err)
@@ -143,7 +139,7 @@ func DownPic(id, paths, page, title, imgUrl string) string {
 	}
 	defer res.Body.Close()
 	// 获得get请求响应的reader对象
-	reader := bufio.NewReaderSize(res.Body, 32 * 1024)
+	reader := bufio.NewReaderSize(res.Body, 32*1024)
 
 	pv := ""
 	if page == "" {
@@ -151,16 +147,16 @@ func DownPic(id, paths, page, title, imgUrl string) string {
 	} else {
 		pv = page + "_"
 	}
-	file, err := os.Create(imgPath + pv + fileName)
-	if err != nil {
-		log.Println("exec failed:", err)
+	if !IsFileExist(imgPath + pv + fileName) {
+		file, err := os.Create(imgPath + pv + fileName)
+		if err != nil {
+			log.Println("exec failed:", err)
+		}
+		// 获得文件的writer对象
+		writer := bufio.NewWriter(file)
+
+		io.Copy(writer, reader)
 	}
-	// 获得文件的writer对象
-	writer := bufio.NewWriter(file)
-
-	io.Copy(writer, reader)
-	//fmt.Println(GetConf("file.Url") + "=" + paths + "/" + id + "/" + page + "_" + fileName)
-
 	return GetConf("file.Url") + "=" + paths + "/" + id + "/" + pv + fileName
 }
 
@@ -172,7 +168,6 @@ func IsFileExist(filename string) bool {
 	return true
 
 }
-
 
 func CreateMutiDir(filePath string) error {
 	if !IsFileExist(filePath) {

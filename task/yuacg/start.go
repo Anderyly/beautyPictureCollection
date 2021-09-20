@@ -25,7 +25,7 @@ func Start() {
 	}
 
 	for k, v := range list {
-		getList(k, v)
+		go getList(k, v)
 	}
 
 }

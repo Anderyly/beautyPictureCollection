@@ -13,10 +13,10 @@ import (
 var Db *sql.DB
 
 type BaseInfo struct {
-	Id        int
-	IDCardNo  string
-	RH        string
-	BloodType string
+	Id           int
+	IDCardNo     string
+	RH           string
+	BloodType    string
 	CustomerName string
 }
 
@@ -32,7 +32,7 @@ func conn() {
 }
 
 // 判断标题是否存在
-func GetId(title string) (bool,int) {
+func GetId(title string) (bool, int) {
 
 	conn()
 
@@ -54,14 +54,14 @@ func GetId(title string) (bool,int) {
 	rows.Close()
 
 	if ck.Cid == 0 {
-		return false,0
+		return false, 0
 	} else {
-		return true,ck.Cid
+		return true, ck.Cid
 	}
 }
 
 // 判断标签是否存在
-func GetMetaId(name string) (bool,int) {
+func GetMetaId(name string) (bool, int) {
 
 	conn()
 
@@ -89,17 +89,15 @@ func GetMetaId(name string) (bool,int) {
 	}
 }
 
-
-
-func StartIn(title, content, keyword, t, url  string) {
+func StartIn(title, content, keyword, t, url string) {
 	conn()
 	timea := strconv.Itoa(int(time.Now().Unix()))
 	sql := fmt.Sprintf(
-		"INSERT INTO `typecho_contents` (title, created, modified, text, type, status, authorId, allowComment, link) VALUES ('%s','%s','%s','%s','%s','%s', '%d', '%d')",
+		"INSERT INTO `typecho_contents` (title, created, modified, text, type, status, authorId, allowComment, link) VALUES ('%s','%s','%s','%s','%s','%s', '%d', '%d', '%s')",
 		title,
 		t,
 		timea,
-		"<!--markdown-->" + content,
+		"<!--markdown-->"+content,
 		"post",
 		"publish",
 		1,
@@ -121,7 +119,7 @@ func StartIn(title, content, keyword, t, url  string) {
 func Meta(keyword string) {
 	conn()
 	a := strings.Split(keyword, ",")
-	for _, v := range a{
+	for _, v := range a {
 		rs, _ := GetMetaId(v)
 		if rs {
 			continue
@@ -144,7 +142,7 @@ func ContentJoinMeta(name, keyword string) {
 	_, cid := GetId(name)
 
 	a := strings.Split(keyword, ",")
-	for _, v := range a{
+	for _, v := range a {
 		_, mid := GetMetaId(v)
 		MetaAdd(mid)
 		sql := fmt.Sprintf(
@@ -162,7 +160,7 @@ func ContentJoinMeta(name, keyword string) {
 func MetaAdd(mid int) {
 	conn()
 	sql := fmt.Sprintf(
-		"UPDATE `typecho_metas` set count=count+1 WHERE mid = %d", mid, )
+		"UPDATE `typecho_metas` set count=count+1 WHERE mid = %d", mid)
 	_, err := Db.Exec(sql)
 	if err != nil {
 		log.Println("exec failed:", err, ", sql:", sql)
