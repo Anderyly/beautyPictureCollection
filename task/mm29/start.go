@@ -33,6 +33,7 @@ func getList(paths, dz string) {
 		} else {
 			url = "https://www.mm29.com/" + dz + "/list_" + strconv.Itoa(i) + ".html"
 		}
+		//log.Println(url)
 
 		rs := other.HttpGet(url, 1)
 		if strings.Contains(rs, "Not Found") {
