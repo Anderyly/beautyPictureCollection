@@ -121,7 +121,7 @@ func content(url, id, page, title, paths string) (string, string, string) {
 		compile := regexp.MustCompile(zz)
 		submatch := compile.FindAllSubmatch([]byte(rs), -1)
 		for _, matches := range submatch {
-			alt := string(matches[2])
+			alt := other.RegexpF(string(matches[2]))
 			img := other.DownPic(id, "yucca/"+paths, page, title, string(matches[1]))
 			str += "![" + alt + "](" + img + ")\n"
 		}
@@ -130,7 +130,7 @@ func content(url, id, page, title, paths string) (string, string, string) {
 			compile := regexp.MustCompile(zz)
 			submatch := compile.FindAllSubmatch([]byte(rs), -1)
 			for _, matches := range submatch {
-				alt := string(matches[2])
+				alt := other.RegexpF(string(matches[2]))
 				img := other.DownPic(id, "yucca/"+paths, page, title, string(matches[1]))
 				str += "![" + alt + "](" + img + ")\n"
 			}
@@ -141,7 +141,7 @@ func content(url, id, page, title, paths string) (string, string, string) {
 			compile := regexp.MustCompile(zz)
 			submatch := compile.FindAllSubmatch([]byte(rs), -1)
 			for _, matches := range submatch {
-				alt = string(matches[2])
+				alt = other.RegexpF(string(matches[2]))
 				img = other.DownPic(id, "yucca/"+paths, page, title, string(matches[1]))
 				str += "![" + alt + "](" + img + ")\n"
 			}

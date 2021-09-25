@@ -119,6 +119,9 @@ func Meta(keyword string) {
 	conn()
 	a := strings.Split(keyword, ",")
 	for _, v := range a {
+		if v == "" {
+			continue
+		}
 		rs, _ := GetMetaId(v)
 		if rs {
 			continue

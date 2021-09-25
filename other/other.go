@@ -2,7 +2,9 @@ package other
 
 import (
 	"bufio"
+	"crypto/md5"
 	"errors"
+	"fmt"
 	"github.com/aWildProgrammer/fconf"
 	"github.com/axgle/mahonia"
 	"io"
@@ -13,20 +15,8 @@ import (
 	"os"
 	"path"
 	"regexp"
-	"strconv"
 	"strings"
-	"time"
 )
-
-func UnixToDate(str, dateVal string) (asd string) {
-
-	strArr1T, err := strconv.ParseInt(str, 10, 64)
-	CheckErr(err)
-	t := time.Unix(strArr1T, 0)
-
-	return t.Format("200601021504")
-
-}
 
 func CheckErr(err error) {
 	if err != nil {
@@ -39,7 +29,7 @@ func HttpGet(url string, tp int) (res string) {
 	client := &http.Client{}
 	request, err := http.NewRequest("GET", url, nil)
 	CheckErr(err)
-	//request.Header.Set("Authorization", "APPCODE "+config.GetConf("token"))
+	request.Header.Set("Referer", url)
 	response, err := client.Do(request)
 	CheckErr(err)
 	defer response.Body.Close()
@@ -53,19 +43,12 @@ func HttpGet(url string, tp int) (res string) {
 }
 
 func ConvertToString(src string, srcCode string, tagCode string) string {
-
 	srcCoder := mahonia.NewDecoder(srcCode)
-
 	srcResult := srcCoder.ConvertString(src)
-
 	tagCoder := mahonia.NewDecoder(tagCode)
-
 	_, cdata, _ := tagCoder.Translate([]byte(srcResult), true)
-
 	result := string(cdata)
-
 	return result
-
 }
 
 func ExternalIP() (net.IP, error) {
@@ -130,33 +113,52 @@ func DownPic(id, paths, page, title, imgUrl string) string {
 		}
 	}
 
-	fileName := path.Base(imgUrl)
-	res, err := http.Get(imgUrl)
-	if err != nil {
-		return ""
-		log.Println(err)
-	}
-	defer res.Body.Close()
-	// 获得get请求响应的reader对象
-	reader := bufio.NewReaderSize(res.Body, 32*1024)
-
 	pv := ""
 	if page == "" {
 		pv = ""
 	} else {
 		pv = page + "_"
 	}
-	if !IsFileExist(imgPath + pv + fileName) {
-		file, err := os.Create(imgPath + pv + fileName)
-		if err != nil {
-			log.Println("exec failed:", err)
-		}
-		// 获得文件的writer对象
-		writer := bufio.NewWriter(file)
 
-		io.Copy(writer, reader)
+	ext := path.Ext(imgUrl)
+	fileName := strings.Replace(path.Base(imgUrl), ext, "", -1)
+	data := []byte(fileName)
+	has := md5.Sum(data)
+	fileName = fmt.Sprintf("%x", has)
+
+	res := HttpProxyPic(imgUrl, RegexpF(imgPath+pv+fileName)+ext)
+
+	if res {
+		return RegexpF(GetConf("file.Url")+paths+"/"+id+"/"+pv+fileName) + ext
+	} else {
+		return ""
 	}
-	return GetConf("file.Url") + "=" + paths + "/" + id + "/" + pv + fileName
+
+}
+
+// 图片防盗链采集
+func HttpProxyPic(url string, path string) bool {
+	client := &http.Client{}
+	request, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return false
+	}
+	request.Header.Set("Referer", url)
+	response, err := client.Do(request)
+	if err != nil {
+		return false
+	}
+	defer response.Body.Close()
+	reader := bufio.NewReaderSize(response.Body, 32*1024)
+	file, err := os.Create(path)
+	if err != nil {
+		return false
+	}
+	writer := bufio.NewWriter(file)
+
+	io.Copy(writer, reader)
+
+	return true
 }
 
 func IsFileExist(filename string) bool {
@@ -205,4 +207,9 @@ func GetConf(name string) string {
 		log.Println(err)
 	}
 	return c.String(name)
+}
+
+func RegexpF(str string) string {
+	re, _ := regexp.Compile(`[\~]|[\!]|[\@]|[\#]|[\$]|[\%]|[\^]|[\&]|[\*]|[\[]|[\]]|[\(]|[\)]|[\{]|[\}]`)
+	return re.ReplaceAllString(str, "")
 }

@@ -88,7 +88,7 @@ func content(url, id, title string) (string, string, string) {
 	submatch := compile.FindAllSubmatch([]byte(rs), -1)
 	str := ""
 	for _, matches := range submatch {
-		alt := string(matches[2])
+		alt := other.RegexpF(string(matches[2]))
 		img := other.DownPic(id, "sjmm", "", title, string(matches[1]))
 		str += "![" + alt + "](" + img + ")\n"
 	}

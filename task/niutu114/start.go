@@ -130,7 +130,7 @@ func content(url, sub, date, page, title, id string) (string, bool, string, stri
 	submatch := compile.FindAllSubmatch([]byte(rs), -1)
 	str := ""
 	for _, matches := range submatch {
-		alt := string(matches[2])
+		alt := other.RegexpF(string(matches[2]))
 		img := other.DownPic(id, "nt/"+sub+"/"+date, page, title, string(matches[3]))
 		str += "![" + alt + "](" + img + ")\n"
 	}

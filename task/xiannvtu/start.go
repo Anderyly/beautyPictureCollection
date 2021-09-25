@@ -117,7 +117,7 @@ func content(url, id, page, title, paths string) (string, string, string, string
 
 	for _, matches := range submatch {
 		ids = string(matches[1])
-		alt := string(matches[2])
+		alt := other.RegexpF(string(matches[2]))
 		img := other.DownPic(id, "xvt/"+paths, page, title, string(matches[3]))
 		str += "![" + alt + "](" + img + ")\n"
 	}
