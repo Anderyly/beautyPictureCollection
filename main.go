@@ -7,10 +7,11 @@ import (
 	"warm/other"
 	"warm/task/mm29"
 	"warm/task/niutu114"
-	"warm/task/shejumm"
 	"warm/task/snly"
 	"warm/task/xiannvtu"
 	"warm/task/yuacg"
+	//"warm/task/shejutu"
+	//"warm/task/yuacg"
 )
 
 func main() {
@@ -35,7 +36,8 @@ func run() {
 	go xiannvtu.Start() // 仙女图采集
 	go niutu114.Start() // 牛图采集
 	go yuacg.Start()    // 雨溪萌域采集
-	go shejumm.Start()  // 射菊mm采集
-	go mm29.Start()     // mm29采集
-	go snly.Start()     // 少女领域
+	//go shejumm.Start()  // 射菊mm采集
+	go mm29.Start() // mm29采集
+	go snly.Start() // 少女领域
+	//go shejutu.Start() // 射菊图
 }
